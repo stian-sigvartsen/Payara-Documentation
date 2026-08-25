@@ -419,6 +419,11 @@ Each HTTP listener has an HTTP protocol, which is created either by using the `c
 | The name of the server. This will be sent as the `Server` header in responses.
 | `set configs.config.server-config.network-config.protocols.protocol.$+{protocol-name}+.http.server-name-enabled=value`
 
+| Behind Proxy
+| When deployed behind a reverse proxy, enable behind-proxy to read client IP addresses from proxy headers rather than the direct connection address. The server checks `X-Real-IP` first, then falls back to the first IP in
+ `X-Forwarded-For` (the original client), and finally the direct remote address. This ensures accurate client IP tracking, for example for brute-force attack protection.
+a| `asadmin set configs.config.server-config.network-config.protocols.protocol.admin-listener.http.behind-proxy=true`
+
 | Default Virtual Server
 | The default virtual server used for the protocol. Establishes the request priority when multiple virtual servers are configured.
 | `set configs.config.server-config.network-config.protocols.protocol.$+{protocol-name}+.http.default-virtual-server=value`
