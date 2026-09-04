@@ -11,6 +11,30 @@ This section documents several extensions made to the security mechanisms and AP
 
 TIP: Payara Platform Enterprise also provides the link:{enterpriseDocsPageRootUrl}/Technical Documentation/Payara Server Documentation/Public API/yubikey.html[Yubikey Authentication Mechanism] feature. This allows authentication through a hardware device. This type of authentication removes some need of using credentials and requires authenticating using a physical token in a very secure way.
 
+[#brute-force-login-attack-protection]
+== Brute Force Login Attack Protection
+
+Malicious users can easily brute force crack user passwords of systems with poor security controls.
+Payara provides protection against this for both administrative UI and REST API by:
+
+* Tracking failed authentication attempts per username and remote host combination.
+
+* Applying an exponential delay after each failed attempt (1 second, 2 seconds, 4 seconds, 8 seconds, etc.)
+
+* Capping the maximum delay at 60 seconds
+
+* Rejecting additional concurrent authentication attempts when too many requests are being delayed for the same user/host (HTTP 429 Too Many Requests)
+
+This mechanism makes it impractical for attackers to try many passwords in rapid succession while allowing legitimate users to retry after a short wait.
+
+This mechanism applies only for remote connections. Local connections are never delayed.
+
+[#behind-proxy-configuration]
+=== Behind Proxy Configuration
+
+When the server is deployed behind a reverse proxy, you must configure Payara to trust the proxy headers (`X-Real-IP` and `X-Forwarded-For`) to correctly identify the client's real IP address. Without this configuration, all authentication attempts would be tracked under the proxy's IP address instead of individual client IPs. Any failed authentication attempt would delay authentication for all clients, even a valid client with the correct credentials.
+For more information about configuring behind-proxy mode and other HTTP options, see xref:/Technical Documentation/Payara Server Documentation/Server Configuration And Management/HTTP Service/Protocols.adoc#configuration-http-behind-proxy[Behind Proxy in Protocol Configuration].
+
 [[see-also]]
 == See Also
 

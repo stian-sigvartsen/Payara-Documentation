@@ -358,6 +358,18 @@ Enable this if the network listener receives traffic from an SSL terminating pro
 set configs.config.server-config.network-config.protocols.protocol.${protocol-name}.http.auth-pass-through-enabled=[true|false]
 ----
 
+[[configuration-http-behind-proxy]]
+==== Behind Proxy
+
+When deployed behind a reverse proxy, enable behind-proxy to read client IP addresses from proxy headers rather than the direct connection address. The server checks `X-Real-IP` first, then falls back to the first IP in `X-Forwarded-For` (the original client), and finally the direct remote address. This ensures accurate client IP tracking, for example for brute-force attack protection.
+
+*Asadmin Command:*
+
+[source, shell]
+----
+asadmin set configs.config.server-config.network-config.protocols.protocol.admin-listener.http.behind-proxy=true
+----
+
 [[configuration-http-chunking-enabled]]
 ==== Chunking Enabled
 
